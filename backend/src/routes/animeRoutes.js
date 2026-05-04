@@ -1,34 +1,28 @@
-const Anime = require("../models/Anime");
+const router = require("express").Router();
+const auth = require("../middleware/auth");
+const upload = require("../middleware/upload");
+const admin = require("../middleware/admin");
 
-exports.createAnime = async (req, res) => {
-  try {
-    const anime = await Anime.create(req.body);
-    res.status(201).json(anime);
-  } catch {
-    res.status(500).json({ error: "Erro ao criar anime" });
-  }
-};
 
-exports.getAnimes = async (req, res) => {
-  const animes = await Anime.find();
-  res.json(animes);
-};
+const {
+  createAnime,
+  getAnimes,
+  uploadAnime
+} = require("../controllers/animeController");
 
-exports.uploadAnime = async (req, res) => {
-  try {
-    const video = req.files.video[0].filename;
-    const thumb = req.files.thumbnail[0].filename;
+router.post("/", auth, admin, createAnime);
 
-    const anime = await Anime.create({
-      title: req.body.title,
-      description: req.body.description,
-      category: req.body.category,
-      videoUrl: `/uploads/${video}`,
-      thumbnail: `/uploads/${thumb}`
-    });
+router.get("/", getAnimes);
 
-    res.json(anime);
-  } catch (err) {
-    res.status(500).json({ error: "Erro no upload" });
-  }
-};
+router.post(
+  "/upload",
+  auth,
+  admin,
+  upload.fields([
+    { name: "video", maxCount: 1 },
+    { name: "thumbnail", maxCount: 1 }
+  ]),
+  uploadAnime
+);
+
+module.exports = router;
