@@ -11,5 +11,6 @@ app.use(express.json());
 
 app.use("/auth", authRoutes);
 app.use("/animes", animeRoutes);
+app.use("/uploads", express.static("uploads"));
 
 module.exports = app;
