@@ -3,6 +3,7 @@ export default function AnimeCard({ anime }) {
     <div style={{ width: 200 }}>
       <img src={anime.thumbnail} style={{ width: "100%" }} />
       <p>{anime.title}</p>
+      <p>{anime.genre}</p>
     </div>
   );
 }

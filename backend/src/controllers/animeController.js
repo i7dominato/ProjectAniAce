@@ -1,15 +1,15 @@
 const Anime = require("../models/Anime");
 
-exports.createAnime = async (req, res) => {
+exports.create = async (req, res) => {
   try {
     const anime = await Anime.create(req.body);
-    res.json(anime);
+    res.status(201).json(anime);
   } catch {
     res.status(500).json({ error: "Erro ao criar anime" });
   }
 };
 
-exports.getAnimes = async (req, res) => {
-  const anime = await Anime.find();
+exports.list = async (req, res) => {
+  const animes = await Anime.find();
   res.json(animes);
 };

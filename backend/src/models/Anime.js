@@ -3,9 +3,10 @@ const mongoose = require("mongoose");
 const animeSchema = new mongoose.Schema({
   title: String,
   description: String,
-  videoUrl: String,
+  episodes: Number,
   thumbnail: String,
-  category: String
+  videoUrl: String,
+  genre: String
 }, { timestamps: true });
 
 module.exports = mongoose.model("Anime", animeSchema);
