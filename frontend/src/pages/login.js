@@ -1,8 +1,6 @@
 import { useState } from "react";
 import api from "../services/api";
 
-import api from "./services/api";
-
 const login = async () => {
   const res = await api.post("/auth/login", {
     email: "teste@email.com",

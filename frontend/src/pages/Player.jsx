@@ -63,8 +63,7 @@ export default function Player() {
 />
     </div>
   );
-  const [episodes, setEpisodes] = useState([]);
-
+  
 useEffect(() => {
   api.get(`/episodes/${episode?.animeId}`).then(res => setEpisodes(res.data));
 }, [episode]);
