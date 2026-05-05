@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
-import "./home.css";
 
 export default function Home() {
   const [hovered, setHovered] = useState(null);
