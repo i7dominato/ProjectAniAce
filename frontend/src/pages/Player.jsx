@@ -39,10 +39,10 @@ export default function Player() {
   src={`http://localhost:5000${episode.videoUrl}`}
 
   onTimeUpdate={(e) => {
-    localStorage.setItem(
-      `progress-${episode._id}`,
-      e.target.currentTime
-    );
+    api.post("/user/progress", {
+  episodeId: episode._id,
+  time: e.target.currentTime
+});
   }}
 
   onLoadedMetadata={() => {

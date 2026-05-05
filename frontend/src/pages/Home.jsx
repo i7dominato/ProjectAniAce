@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./home.css";
 
 export default function Home() {
+  const [hovered, setHovered] = useState(null);
   const [animes, setAnimes] = useState([]);
   const [continueWatching, setContinueWatching] = useState([]);
   const navigate = useNavigate();
@@ -80,19 +81,56 @@ useEffect(() => {
       <h1>🔥 AniAce</h1>
 
       <div className="row">
-        {animes.map(anime => (
-          <div
-            key={anime._id}
-            className="card"
-            onClick={() => navigate(`/anime/${anime._id}`)}
-          >
-            <img
-              src={`http://localhost:5000${anime.thumbnail}`}
-              alt=""
-            />
-            <p>{anime.title}</p>
+       {animes.map(anime => (
+  <div
+    key={anime._id}
+    className={`card ${hovered === anime._id ? "active" : ""}`}
+    onMouseEnter={() => setHovered(anime._id)}
+    onMouseLeave={() => setHovered(null)}
+  >
+    <div className="thumb-wrapper">
+
+      {hovered === anime._id ? (
+        <>
+          <video
+            src={`http://localhost:5000${anime.videoUrl}`}
+            autoPlay
+            muted
+            loop
+            className="preview-video"
+          />
+
+          {/* 🔥 INFO EXTRA */}
+          <div className="card-info">
+            <h3>{anime.title}</h3>
+
+            <div className="buttons">
+              <button onClick={() => navigate(`/anime/${anime._id}`)}>
+                ▶ Play
+              </button>
+              <button
+  onClick={(e) => {
+    e.stopPropagation();
+    api.post(`/user/favorite/${anime._id}`);
+  }}
+>
+  + Minha Lista
+</button>
+            </div>
+
+            <p className="desc">{anime.description}</p>
           </div>
-        ))}
+        </>
+      ) : (
+        <img
+          src={`http://localhost:5000${anime.thumbnail}`}
+          alt=""
+        />
+      )}
+
+    </div>
+  </div>
+))}
       </div>
     </div>
   );

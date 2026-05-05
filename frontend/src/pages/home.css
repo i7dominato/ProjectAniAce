@@ -2,6 +2,7 @@
   display: flex;
   gap: 15px;
   overflow-x: auto;
+  overflow: visible;
 }
 
 .card {
@@ -46,4 +47,83 @@
   height: 5px;
   background: red;
   border-radius: 0 0 10px 10px;
+}
+.preview-video {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.thumb-wrapper {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+}
+
+.thumb-wrapper img,
+.preview-video {
+  width: 100%;
+  height: 100%;
+}
+
+.card {
+  position: relative;
+  min-width: 200px;
+  transition: transform 0.3s ease;
+}
+
+.card.active {
+  transform: scale(1.4);
+  z-index: 10;
+}
+
+.thumb-wrapper {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #000;
+}
+
+.preview-video,
+.thumb-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+}
+
+.card-info h3 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.card-info .buttons {
+  display: flex;
+  gap: 5px;
+  margin: 5px 0;
+}
+
+.card-info button {
+  background: #fff;
+  border: none;
+  padding: 5px 8px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.card-info .desc {
+  font-size: 12px;
+  opacity: 0.8;
 }
