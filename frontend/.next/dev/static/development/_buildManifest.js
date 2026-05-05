@@ -12,6 +12,9 @@ self.__BUILD_MANIFEST = {
   },
   "sortedPages": [
     "/",
+    "/Anime",
+    "/Home",
+    "/Player",
     "/_app",
     "/_error",
     "/anime/[id]",

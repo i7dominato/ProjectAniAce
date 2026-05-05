@@ -1,0 +1,49 @@
+.row {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+}
+
+.card {
+  min-width: 200px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.card:hover {
+  transform: scale(1.08);
+}
+
+.card {
+  position: relative;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  border-radius: 10px;
+}
+
+.card:hover {
+  transform: scale(1.12);
+  z-index: 2;
+}
+.thumb-wrapper {
+  position: relative;
+}
+
+.progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 5px;
+  background: red;
+  border-radius: 0 0 10px 10px;
+}
