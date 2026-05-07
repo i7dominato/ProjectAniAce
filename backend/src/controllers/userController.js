@@ -1,23 +1,34 @@
-const User = require("../models/User");
+const Progress = require("../models/Progress");
+const Anime = require("../models/Anime");
 
-exports.toggleFavorite = async (req, res) => {
-  const user = await User.findById(req.user.id);
+exports.saveProgress = async (req, res) => {
+  try {
+    const { animeId, episodeId, time } = req.body;
 
-  const animeId = req.params.id;
+    const progress = await Progress.findOneAndUpdate(
+      { user: req.user.id, animeId },
+      { episodeId, time },
+      { upsert: true, new: true }
+    );
 
-  if (user.favorites.includes(animeId)) {
-    user.favorites = user.favorites.filter(id => id.toString() !== animeId);
-  } else {
-    user.favorites.push(animeId);
+    res.json(progress);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao salvar progresso" });
   }
-
-  await user.save();
-
-  res.json(user.favorites);
 };
 
-const Anime = require("../models/Anime");
-const Progress = require("../models/Progress");
+exports.getProgress = async (req, res) => {
+  try {
+    const progress = await Progress.findOne({
+      user: req.user.id,
+      animeId: req.params.animeId,
+    });
+
+    res.json(progress || {});
+  } catch {
+    res.status(500).json({ error: "Erro ao buscar progresso" });
+  }
+};
 
 exports.getAllProgress = async (req, res) => {
   try {
@@ -30,7 +41,7 @@ exports.getAllProgress = async (req, res) => {
         return {
           ...p._doc,
           anime,
-          duration: 1000, // pode ajustar depois
+          duration: 1200,
         };
       })
     );
