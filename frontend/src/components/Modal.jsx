@@ -6,8 +6,7 @@ import EpisodesList from "./EpisodesList";
 import "./modal.css";
 
 export default function Modal({ anime, onClose }) {
-  const [video, setVideo] = useState(anime.videoUrl);
-
+  const [video, setVideo] = useState(anime?.videoUrl || "");
   if (!anime) return null;
 
   return (

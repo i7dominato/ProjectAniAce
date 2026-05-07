@@ -34,17 +34,19 @@ exports.getAllProgress = async (req, res) => {
   try {
     const progress = await Progress.find({ user: req.user.id });
 
-    const result = await Promise.all(
-      progress.map(async (p) => {
-        const anime = await Anime.findById(p.animeId);
+const animeIds = progress.map(p => p.animeId);
 
-        return {
-          ...p._doc,
-          anime,
-          duration: 1200,
-        };
-      })
-    );
+const animes = await Anime.find({ _id: { $in: animeIds } });
+
+const result = progress.map(p => {
+  const anime = animes.find(a => a._id.toString() === p.animeId);
+
+  return {
+    ...p._doc,
+    anime,
+    duration: 1200
+  };
+});
 
     res.json(result);
   } catch {

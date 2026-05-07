@@ -25,7 +25,9 @@ export default function ContinueWatching({ onSelect }) {
             className="card"
             onClick={() => onSelect(item.anime)}
           >
+            {item.anime && (
             <img src={item.anime.thumbnail} />
+            )}
             <div className="progress-bar">
               <div
                 style={{
