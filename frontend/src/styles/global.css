@@ -5,20 +5,23 @@ body {
   font-family: Arial;
 }
 
+.content {
+  padding-top: 80px;
+}
+
 .navbar {
   position: fixed;
+  top: 0;
   width: 100%;
-  padding: 15px 40px;
   background: linear-gradient(to bottom, black, transparent);
-  display: flex;
-  justify-content: space-between;
-  z-index: 1000;
+  padding: 20px;
+  z-index: 10;
 }
 
 .logo {
   color: red;
+  font-size: 24px;
 }
-
 .links a {
   margin-left: 20px;
   color: white;
@@ -179,4 +182,10 @@ body {
 .progress-bar div {
   height: 100%;
   background: red;
+}
+
+.loading {
+  color: white;
+  text-align: center;
+  padding: 50px;
 }

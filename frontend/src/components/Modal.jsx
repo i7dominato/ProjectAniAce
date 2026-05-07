@@ -1,28 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Player from "./Player";
 import EpisodesList from "./EpisodesList";
-import "./modal.css";
+import NextOverlay from "./NextOverlay";
+
 
 export default function Modal({ anime, onClose }) {
-  const [video, setVideo] = useState(anime?.videoUrl || "");
+  const [episodes, setEpisodes] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [video, setVideo] = useState("");
+  const [showNext, setShowNext] = useState(false);
+
+
+  useEffect(() => {
+    if (!anime) return;
+
+    fetch(`/api/episodes/${anime._id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setEpisodes(data);
+        setVideo(data[0]?.videoUrl);
+      });
+  }, [anime]);
+
+  const handleEnd = () => {
+  setShowNext(true);
+ };
+
+  const handleNext = () => {
+    setShowNext(false);
+    const nextIndex = currentIndex + 1;
+
+    if (nextIndex < episodes.length) {
+      setCurrentIndex(nextIndex);
+      setVideo(episodes[nextIndex].videoUrl);
+    }
+  };
+
   if (!anime) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+    <div className="modal" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
 
-        <Player animeId={anime._id} videoUrl={video} />
+        <Player
+          animeId={anime._id}
+          videoUrl={video}
+          onEnd={handleEnd}
+        />
+        {showNext && <NextOverlay onNext={handleNext} />}
 
-        <div className="modal-content">
-          <h1>{anime.title}</h1>
-          <p>{anime.description}</p>
-        </div>
+        <h1>{anime.title}</h1>
 
         <EpisodesList
           animeId={anime._id}
-          onSelect={setVideo}
+          onSelect={(url, index) => {
+            setVideo(url);
+            setCurrentIndex(index);
+          }}
         />
 
       </div>

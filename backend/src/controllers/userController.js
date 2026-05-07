@@ -6,7 +6,7 @@ exports.saveProgress = async (req, res) => {
     const { animeId, episodeId, time } = req.body;
 
     const progress = await Progress.findOneAndUpdate(
-      { user: req.user.id, animeId },
+      { user: req.user.id, animeId, episodeId },
       { episodeId, time },
       { upsert: true, new: true }
     );
@@ -22,6 +22,7 @@ exports.getProgress = async (req, res) => {
     const progress = await Progress.findOne({
       user: req.user.id,
       animeId: req.params.animeId,
+      episodeId: req.params.episodeId,
     });
 
     res.json(progress || {});

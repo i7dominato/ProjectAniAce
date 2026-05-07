@@ -1,30 +1,57 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import api from "../services/api";
+import Player from "./Player";
+import EpisodesList from "./EpisodesList";
 
-export default function EpisodesList({ animeId, onSelect }) {
+export default function Modal({ anime, onClose }) {
   const [episodes, setEpisodes] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [video, setVideo] = useState("");
 
   useEffect(() => {
-    api.get(`/episodes/${animeId}`).then((res) => {
-      setEpisodes(res.data);
-    });
-  }, [animeId]);
+    if (!anime) return;
+
+    fetch(`/api/episodes/${anime._id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setEpisodes(data);
+        setVideo(data[0]?.videoUrl);
+      });
+  }, [anime]);
+
+  const handleNext = () => {
+    const nextIndex = currentIndex + 1;
+
+    if (nextIndex < episodes.length) {
+      setCurrentIndex(nextIndex);
+      setVideo(episodes[nextIndex].videoUrl);
+    }
+  };
+
+  if (!anime) return null;
 
   return (
-    <div className="episodes">
-      <h2>Episódios</h2>
+    <div className="modal" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
 
-      {episodes.map((ep) => (
-        <div
-          key={ep._id}
-          className="episode"
-          onClick={() => onSelect(ep.videoUrl)}
-        >
-          {ep.title}
-        </div>
-      ))}
+        <Player
+          animeId={anime._id}
+          videoUrl={video}
+          onEnd={handleNext}
+        />
+
+        <h1>{anime.title}</h1>
+
+        <EpisodesList
+          animeId={anime._id}
+          onSelect={(url, index) => {
+            setVideo(url);
+            setCurrentIndex(index);
+          }}
+        />
+
+      </div>
     </div>
   );
 }

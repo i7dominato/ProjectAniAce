@@ -3,10 +3,10 @@
 import { useEffect, useRef } from "react";
 import api from "../services/api";
 
-export default function Player({ animeId, videoUrl }) {
+export default function Player({ animeId, videoUrl, onEnd }) {
   const videoRef = useRef(null);
+  let lastSave = 0;
 
-  // carregar progresso
   useEffect(() => {
     api.get(`/user/progress/${animeId}`).then((res) => {
       if (res.data?.time && videoRef.current) {
@@ -15,24 +15,28 @@ export default function Player({ animeId, videoUrl }) {
     });
   }, [animeId]);
 
-  // salvar progresso
   const handleTimeUpdate = () => {
-    const time = videoRef.current.currentTime;
+    const now = Date.now();
 
-    api.post("/user/progress", {
-      animeId,
-      time,
-    });
+    if (now - lastSave > 5000) {
+      lastSave = now;
+
+      api.post("/user/progress", {
+        animeId,
+        time: videoRef.current.currentTime,
+      });
+    }
   };
 
   return (
     <video
       ref={videoRef}
       src={videoUrl}
+      style={{ width: "100%", maxHeight: "80vh" }}
       controls
       autoPlay
       onTimeUpdate={handleTimeUpdate}
-      className="modal-video"
+      onEnded={onEnd} // 🔥 AQUI
     />
   );
 }

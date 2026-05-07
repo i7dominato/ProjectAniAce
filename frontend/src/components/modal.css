@@ -62,3 +62,20 @@
 .episode:hover {
   background: #333;
 }
+
+.overlay {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0,0,0,0.8);
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+}
+
+.overlay button {
+  background: red;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
