@@ -2,6 +2,19 @@
 
 import { useEffect, useState } from "react";
 import api from "../../../services/api";
+import { useRef } from "react";
+
+const videoRef = useRef();
+
+useEffect(() => {
+  const saved = JSON.parse(localStorage.getItem("progress"));
+
+  if (saved && saved.animeId === params.id) {
+    setTimeout(() => {
+      videoRef.current.currentTime = saved.time;
+    }, 500);
+  }
+}, []);
 
 export default function Player({ params }) {
   const [episode, setEpisode] = useState(null);
@@ -16,6 +29,14 @@ export default function Player({ params }) {
   return (
     <div>
       <video
+        src={anime.videoUrl}
+        muted
+        loop
+        autoPlay
+        className="preview"
+      />
+      <video
+        ref={videoRef}
         src={episode.videoUrl}
         controls
         autoPlay

@@ -4,6 +4,16 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import Row from "../components/Row";
 import Navbar from "../components/Navbar";
+import ContinueWatching from "../components/ContinueWatching";
+import Modal from "../components/Modal";
+
+const [selected, setSelected] = useState(null);
+
+<ContinueWatching onSelect={setSelected} />
+
+{selected && (
+  <Modal anime={selected} onClose={() => setSelected(null)} />
+)}
 
 export default function Home() {
   const [progress, setProgress] = useState(null);

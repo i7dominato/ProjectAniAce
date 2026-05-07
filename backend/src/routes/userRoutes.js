@@ -1,9 +1,8 @@
 const router = require("express").Router();
 const auth = require("../middleware/auth");
 
-const { toggleFavorite, saveProgress } = require("../controllers/userController");
+const { saveProgress, getProgress } = require("../controllers/userController");
 
-router.post("/favorite/:id", auth, toggleFavorite);
 router.post("/progress", auth, saveProgress);
-
+router.get("/all-progress", auth, getAllProgress);
 module.exports = router;

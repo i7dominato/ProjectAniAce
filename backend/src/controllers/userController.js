@@ -16,22 +16,27 @@ exports.toggleFavorite = async (req, res) => {
   res.json(user.favorites);
 };
 
-exports.saveProgress = async (req, res) => {
-  const { episodeId, time } = req.body;
+const Anime = require("../models/Anime");
+const Progress = require("../models/Progress");
 
-  const user = await User.findById(req.user.id);
+exports.getAllProgress = async (req, res) => {
+  try {
+    const progress = await Progress.find({ user: req.user.id });
 
-  const existing = user.watchHistory.find(
-    w => w.episodeId === episodeId
-  );
+    const result = await Promise.all(
+      progress.map(async (p) => {
+        const anime = await Anime.findById(p.animeId);
 
-  if (existing) {
-    existing.time = time;
-  } else {
-    user.watchHistory.push({ episodeId, time });
+        return {
+          ...p._doc,
+          anime,
+          duration: 1000, // pode ajustar depois
+        };
+      })
+    );
+
+    res.json(result);
+  } catch {
+    res.status(500).json({ error: "Erro ao buscar progresso" });
   }
-
-  await user.save();
-
-  res.json({ success: true });
 };
