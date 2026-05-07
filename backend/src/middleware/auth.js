@@ -1,20 +1,25 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  const token = req.headers.authorization;
-
-  if (!token) return res.status(401).json({ error: "Sem token" });
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch {
-    res.status(401).json({ error: "Token inválido" });
-  }
-};
+    const authHeader = req.headers.authorization;
 
-req.user = {
-  id: decoded.id,
-  role: decoded.role
+    if (!authHeader) {
+      return res.status(401).json({ error: "Token não fornecido" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // ✅ AGORA SIM dentro da função
+    req.user = {
+      id: decoded.id,
+      role: decoded.role,
+    };
+
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: "Token inválido" });
+  }
 };

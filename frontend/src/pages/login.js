@@ -1,8 +1,8 @@
 "use client";
 
 import { useContext, useState } from "react";
-import api from "../../services/api";
-import { AuthContext } from "../../context/AuthContext";
+import api from "../services/api";
+import { AuthContext } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
