@@ -1,9 +1,10 @@
 import "../styles/global.css";
+import { AuthProvider } from "../context/AuthContext";
 
 export default function App({ Component, pageProps }) {
-  try {
-    return <Component {...pageProps} />;
-  } catch {
-    return <div>Erro no sistema</div>;
-  }
+  return (
+    <AuthProvider>
+      <Component {...pageProps} />
+    </AuthProvider>
+  );
 }

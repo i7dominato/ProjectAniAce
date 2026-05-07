@@ -7,9 +7,9 @@ export const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  const login = (token) => {
-    localStorage.setItem("token", token);
-    setUser(token);
+  const login = (data) => {
+    localStorage.setItem("token", data.token);
+    setUser(data.user);
   };
 
   const logout = () => {
