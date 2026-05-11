@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-const ProgressSchema = new mongoose.Schema({
-  user: String,
-  animeId: String,
+const progressSchema = new mongoose.Schema({
+  userId: String,
   episodeId: String,
   time: Number,
-});
+  duration: Number,
+}, { timestamps: true });
 
-module.exports = mongoose.model("Progress", ProgressSchema);
+module.exports = mongoose.model("Progress", progressSchema);

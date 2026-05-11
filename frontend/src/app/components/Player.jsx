@@ -1,53 +1,46 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import api from "../services/api";
 
-export default function Player({ episode, onEnded }) {
+export default function Player({ episode, user }) {
   const videoRef = useRef(null);
-  const [progress, setProgress] = useState(0);
 
-  // ▶ carregar progresso salvo
+  // 📥 carregar progresso do backend
   useEffect(() => {
-    const saved = localStorage.getItem(`progress-${episode._id}`);
-    if (saved && videoRef.current) {
-      videoRef.current.currentTime = saved;
-    }
-  }, [episode]);
+    if (!user) return;
+
+    api.get(`/progress/${user._id}`).then(res => {
+      const found = res.data.find(p => p.episodeId === episode._id);
+
+      if (found && videoRef.current) {
+        videoRef.current.currentTime = found.time;
+      }
+    });
+  }, [episode, user]);
 
   // 💾 salvar progresso
   const handleTimeUpdate = () => {
-    const current = videoRef.current.currentTime;
-    const duration = videoRef.current.duration;
+    if (!user) return;
 
-    localStorage.setItem(`progress-${episode._id}`, current);
+    const video = videoRef.current;
 
-    setProgress((current / duration) * 100);
+    api.post("/progress", {
+      userId: user._id,
+      episodeId: episode._id,
+      time: video.currentTime,
+      duration: video.duration
+    });
   };
 
   return (
-    <div style={{ width: "100%", background: "black" }}>
-      <video
-        ref={videoRef}
-        src={`http://localhost:5000${episode.video}`}
-        controls
-        autoPlay
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={onEnded}
-        style={{ width: "100%", height: "80vh" }}
-      />
-
-      {/* 🔥 barra estilo Netflix */}
-      <div style={{
-        height: "5px",
-        background: "#333",
-        width: "100%"
-      }}>
-        <div style={{
-          height: "100%",
-          width: `${progress}%`,
-          background: "red"
-        }} />
-      </div>
-    </div>
+    <video
+      ref={videoRef}
+      src={`http://localhost:5000${episode.video}`}
+      controls
+      autoPlay
+      onTimeUpdate={handleTimeUpdate}
+      style={{ width: "100%", height: "80vh" }}
+    />
   );
 }

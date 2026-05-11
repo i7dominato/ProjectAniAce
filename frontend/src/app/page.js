@@ -28,17 +28,17 @@ export default function Home() {
   const [continueWatching, setContinueWatching] = useState([]);
 
 useEffect(() => {
-  const watched = [];
+  if (!user) return;
 
-  for (let key in localStorage) {
-    if (key.startsWith("progress-")) {
-      const id = key.replace("progress-", "");
+  api.get(`/progress/${user._id}`).then(async (res) => {
+    const list = [];
 
-      api.get(`/episodes/${id}`).then(res => {
-        watched.push(res.data);
-        setContinueWatching([...watched]);
-      });
+    for (let p of res.data) {
+      const ep = await api.get(`/episodes/${p.episodeId}`);
+      list.push({ ...ep.data, progress: p.time });
     }
-  }
-}, []);
+
+    setContinueWatching(list);
+  });
+}, [user]);
 }
